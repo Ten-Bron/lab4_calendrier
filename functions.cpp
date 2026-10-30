@@ -5,7 +5,7 @@
 
 using namespace  std;
 
-int take_input() {
+int receive_date() {
     int input;
     bool bIs_valid;
     do {
@@ -21,8 +21,8 @@ int take_input() {
 void loop_program() {
     char input;
     do {
-        int date = take_input();
-        set_year(date);
+        int date = receive_date();
+        print_year(date);
         do {
             cout << "voulez-vous continuer [O|N] :\n";
             cin >> input;
@@ -42,6 +42,8 @@ int set_initial_offset_day(const int annee) {
 
     if (annee >= base_year) {
         for (int i = base_year; i < annee; ++i) {
+            // bissextile return either 1 if bissec, 0 if not, there are 365 day if not bissec and 366 if bissec,
+            // so we are basically doing 365 + 0 if not bissec and 365+1 if bissec -> 365 + if bissec?
             sum += 365 + static_cast<int>(bissextile(i));
         }
     } else {
@@ -75,7 +77,7 @@ int set_nDay_in_month(const int month,const int annee) {
     }
 }
 
-void set_month(const int num_days_in_month, int& offset_day) {
+void print_month(const int num_days_in_month, int& offset_day) {
     int count_day = 1; // used to fill the month, its equivalent to i, but count from 1 and doesnt count the empty spaces.
     int total_nDay = 0;
     for (size_t i = 0; i< num_days_in_month+offset_day; ++i) {
@@ -104,7 +106,7 @@ void set_month(const int num_days_in_month, int& offset_day) {
     offset_day = 1+(total_nDay%7);
 }
 
-void set_year(int annee) {
+void print_year(int annee) {
     array<string,12> months_name {
         "Janvier", "Fevrier", "Mars", "Avril",
         "Mai", "Juin","Juillet", "Aout", "Septembre",
@@ -121,9 +123,8 @@ void set_year(int annee) {
             cout <<"  "<< days_week[i] << " ";
         }
         cout << endl;
-        set_month(set_nDay_in_month(static_cast<int>(i),annee), offset_day);
+        print_month(set_nDay_in_month(static_cast<int>(i),annee), offset_day);
         cout << endl;
-        //set_month(i,months_name.at(i), annee);
     }
 
 }
