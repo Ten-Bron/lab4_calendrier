@@ -38,17 +38,18 @@ bool bissextile(int annee) {
 // 1st January 2024 was a monday !!
 int set_initial_offset_day(const int annee) {
     const int base_year = 2024;
+    const int num_days_non_bissec = 365;
     int sum = 0;
 
     if (annee >= base_year) {
         for (int i = base_year; i < annee; ++i) {
             // bissextile return either 1 if bissec, 0 if not, there are 365 day if not bissec and 366 if bissec,
             // so we are basically doing 365 + 0 if not bissec and 365+1 if bissec -> 365 + if bissec?
-            sum += 365 + static_cast<int>(bissextile(i));
+            sum += num_days_non_bissec + static_cast<int>(bissextile(i));
         }
     } else {
         for (int i = annee; i < base_year; ++i) {
-            sum -= 365 + static_cast<int>(bissextile(i));
+            sum -= num_days_non_bissec + static_cast<int>(bissextile(i));
         }
     }
     return ((sum % 7) + 7) % 7;
@@ -82,7 +83,7 @@ void print_month(const int num_days_in_month, int& offset_day) {
     int total_nDay = 0;
     for (size_t i = 0; i< num_days_in_month+offset_day; ++i) {
         // filling the month with the number of days.
-        if (i%7==0 && i != 0) {
+        if (i%7==0 && i != 0 ) {
             // \n to conclude the week.
             cout <<endl;
         }
@@ -94,7 +95,7 @@ void print_month(const int num_days_in_month, int& offset_day) {
             cout << " " << count_day << " ";
             count_day++;
         }
-        else {
+        else{
             // if this day belongs to another month, add a space and skip to the next day.
             cout << "    ";
         }
@@ -107,23 +108,23 @@ void print_month(const int num_days_in_month, int& offset_day) {
 }
 
 void print_year(int annee) {
-    array<string,12> months_name {
+    const array<string,12> months_name {
         "Janvier", "Fevrier", "Mars", "Avril",
         "Mai", "Juin","Juillet", "Aout", "Septembre",
         "Octobre", "Novembre", "Decembre"
     };
     int offset_day = set_initial_offset_day(annee);
-    for (size_t i = 0; i< months_name.size(); ++i) {
-        array<char,7> days_week{
+    for (size_t j = 0; j< months_name.size(); ++j) {
+        const array<char,7> days_week{
             'L','M','M','J','V','S','D'
         };
         // title, exemple: February 2024.
-        cout << months_name.at(i) << " " << annee <<endl;
+        cout << months_name.at(j) << " " << annee <<endl;
         for (size_t i = 0; i< days_week.size(); ++i) {
             cout <<"  "<< days_week[i] << " ";
         }
         cout << endl;
-        print_month(set_nDay_in_month(static_cast<int>(i),annee), offset_day);
+        print_month(set_nDay_in_month(static_cast<int>(j),annee), offset_day);
         cout << endl;
     }
 
